@@ -1,0 +1,462 @@
+<!DOCTYPE HTML>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <title>Jeonghwan "Jay" Lee</title>
+  
+  <meta name="author" content="Jeonghwan Lee">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+<!--  <link rel="icon" type="image/png" href="images/seal_icon.png"> -->
+</head>
+
+<body>
+  <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+    <tr style="padding:0px">
+      <td style="padding:0px">
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+          <tr style="padding:0px">
+            <td style="padding:2.5%;width:63%;vertical-align:middle">
+              <p style="text-align:center">
+                <name>Jeonghwan Lee</name>
+              </p>
+              <p>
+                  I am a PhD student in Mechanical Engineering at <a href="https://www.me.utexas.edu/">The University of Texas at Austin</a>. I have worked with <a href="https://www.me.utexas.edu/people/faculty-directory/sulzer">James Sulzer</a> at <a href="https://sites.utexas.edu/rewire/">Rehabilitation with Insight from Robotics and Engineering (Rewire) Lab</a> on post-stroke gait analysis and a robot-assisted gait therapy. 
+              </p>
+              <p>
+                  Before joining a PhD program at UT Austin, I did my master at <a href="https://me.snu.ac.kr/en">Seoul National University</a> and bachelors at <a href="https://me.hanyang.ac.kr/?passedIntro=true&lang=eng">Hanyang University</a> in South Korea. 
+              </p>
+              <p>
+                  
+              </p>
+              <p style="text-align:center">
+                <a href="mailto:jlee85@utexas.edu">Email</a> &nbsp/&nbsp
+                <a href="data/JLee_CV_20210310.pdf">CV</a> &nbsp/&nbsp
+                <!-- <a href="data/JLee-bio.txt">Bio</a> &nbsp/&nbsp -->
+                <a href="https://scholar.google.com/citations?user=Ml9dCFkAAAAJ&hl=en">Google Scholar</a> &nbsp/&nbsp
+                <a href="https://www.linkedin.com/in/jlee52/">Linkedin</a>
+              </p>
+            </td>
+            <td style="padding:2.5%;width:40%;max-width:40%">
+              <a href="images/JLee_headshot.jpg"><img style="width:100%;max-width:100%" alt="profile photo" src="images/JLee_headshot.jpg" class="hoverZoomLink"></a>
+            </td>
+          </tr>
+        </tbody></table>
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr>
+            <td style="padding:20px;width:100%;vertical-align:middle">
+              <heading>Research</heading>
+              <p>
+                I'm interested in computer vision, machine learning, optimization, and image processing.
+                Much of my research is about inferring the physical world (shape, motion, color, light, etc) from images.
+                Representative papers are <span class="highlight">highlighted</span>.
+              </p>
+            </td>
+          </tr>
+        </tbody></table>
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+
+          <tr onmouseout="mipnerf_stop()" onmouseover="mipnerf_start()"  bgcolor="#ffffd0">
+            <td style="padding:20px;width:25%;vertical-align:middle">
+              <div class="one">
+                <div class="two" id='mipnerf_image'><video  width=100% height=100% muted autoplay loop>
+                <source src="images/mipnerf_ipe_yellow.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+                </video></div>
+                <img src='images/mipnerf_ipe_yellow.png' width="160">
+              </div>
+              <script type="text/javascript">
+                function mipnerf_start() {
+                  document.getElementById('mipnerf_image').style.opacity = "1";
+                }
+
+                function mipnerf_stop() {
+                  document.getElementById('mipnerf_image').style.opacity = "0";
+                }
+                mipnerf_stop()
+              </script>
+            </td>
+            <td style="padding:20px;width:75%;vertical-align:middle">
+              <a href="http://jonbarron.info/mipnerf">
+                <papertitle>Mip-NeRF: A Multiscale Representation for Anti-Aliasing Neural Radiance Fields</papertitle>
+              </a>
+              <br>
+              <strong>Jonathan T. Barron</strong>,
+              <a href="https://bmild.github.io/">Ben Mildenhall</a>,
+              <a href="http://matthewtancik.com/">Matthew Tancik</a>, <br>
+              <a href="https://phogzone.com/">Peter Hedman</a>,
+              <a href="http://www.ricardomartinbrualla.com/">Ricardo Martin-Brualla</a>,
+              <a href="https://pratulsrinivasan.github.io/">Pratul Srinivasan</a>
+              <br>
+              <em>arXiv</em>, 2021 
+              <br>
+              <a href="http://jonbarron.info/mipnerf">project page</a>
+              /
+              <a href="https://arxiv.org/abs/2103.13415">arXiv</a>
+              /
+              <a href="https://youtu.be/EpH175PY1A0">video</a>
+              <p></p>
+              <p>NeRF is aliased, but we can anti-alias it by casting cones and prefiltering the positional encoding function.</p>
+            </td>
+          </tr> 
+
+          <tr onmouseout="ibrnet_stop()" onmouseover="ibrnet_start()">
+            <td style="padding:20px;width:25%;vertical-align:middle">
+              <div class="one">
+                <div class="two" id='ibrnet_image'><video  width=100% height=100% muted autoplay loop>
+                <source src="images/ibrnet_after.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+                </video></div>
+                <img src='images/ibrnet_before.jpg' width="160">
+              </div>
+              <script type="text/javascript">
+                function ibrnet_start() {
+                  document.getElementById('ibrnet_image').style.opacity = "1";
+                }
+
+                function ibrnet_stop() {
+                  document.getElementById('ibrnet_image').style.opacity = "0";
+                }
+                ibrnet_stop()
+              </script>
+            </td>
+            <td style="padding:20px;width:75%;vertical-align:middle">
+              <a href="https://ibrnet.github.io/">
+                <papertitle>IBRNet: Learning Multi-View Image-Based Rendering</papertitle>
+              </a>
+              <br>
+              <a href="https://www.cs.cornell.edu/~qqw/">Qianqian Wang</a>,
+              <a href="https://www.linkedin.com/in/zhicheng-wang-96116897/">Zhicheng Wang</a>,
+              <a href="https://www.kylegenova.com/">Kyle Genova</a>,
+              <a href="https://people.eecs.berkeley.edu/~pratul/">Pratul Srinivasan</a>,
+              <a href="https://scholar.google.com/citations?user=Rh9T3EcAAAAJ&hl=en">Howard Zhou</a>, <br>
+              <strong>Jonathan T. Barron</strong>, 
+              <a href="http://www.ricardomartinbrualla.com/">Ricardo Martin-Brualla</a>,
+              <a href="https://www.cs.cornell.edu/~snavely/">Noah Snavely</a>, 
+              <a href="https://www.cs.princeton.edu/~funk/">Thomas Funkhouser</a>
+              <br>
+              <em>CVPR</em>, 2021
+              <br>
+              <a href="https://ibrnet.github.io/">project page</a> /
+              <a href="https://arxiv.org/abs/2102.13090">arXiv</a>
+              <p></p>
+              <p>By learning how to pay attention to input images at render time, 
+                  we can amortize inference for view synthesis and reduce error rates by 15%.</p>
+            </td>
+          </tr>
+
+          <tr onmouseout="nerv_stop()" onmouseover="nerv_start()">
+            <td style="padding:20px;width:25%;vertical-align:middle">
+              <div class="one">
+                <div class="two" id='nerv_image'><video  width=100% height=100% muted autoplay loop>
+                <source src="images/hotdog.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+                </video></div>
+                <img src='images/hotdog.jpg' width="160">
+              </div>
+              <script type="text/javascript">
+                function nerv_start() {
+                  document.getElementById('nerv_image').style.opacity = "1";
+                }
+
+                function nerv_stop() {
+                  document.getElementById('nerv_image').style.opacity = "0";
+                }
+                nerv_stop()
+              </script>
+            </td>
+            <td style="padding:20px;width:75%;vertical-align:middle">
+              <a href="https://people.eecs.berkeley.edu/~pratul/nerv/">
+                <papertitle>NeRV: Neural Reflection and Visibility Fields for Relighting and View Synthesis</papertitle>
+              </a>
+              <br>
+              <a href="https://people.eecs.berkeley.edu/~pratul/">Pratul Srinivasan</a>,
+              <a href="https://boyangdeng.com/">Boyang Deng</a>,
+              <a href="https://people.csail.mit.edu/xiuming/">Xiuming Zhang</a>, <br>
+              <a href="http://matthewtancik.com/">Matthew Tancik</a>,
+              <a href="https://bmild.github.io/">Ben Mildenhall</a>,
+              <strong>Jonathan T. Barron</strong>
+              <br>
+              <em>CVPR</em>, 2021
+              <br>
+              <a href="https://people.eecs.berkeley.edu/~pratul/nerv/">project page</a> /
+              <a href="https://www.youtube.com/watch?v=4XyDdvhhjVo">video</a> /
+              <a href="https://arxiv.org/abs/2012.03927">arXiv</a>
+              <p></p>
+              <p>Using neural approximations of expensive visibility integrals lets you recover relightable NeRF-like models.</p>
+            </td>
+          </tr>
+
+
+          <tr onmouseout="winr_stop()" onmouseover="winr_start()">
+            <td style="padding:20px;width:25%;vertical-align:middle">
+              <div class="one">
+                <div class="two" id='winr_image'><video  width=100% height=100% muted autoplay loop>
+                <source src="images/notre_160.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+                </video></div>
+                <img src='images/notre.jpg' width="160">
+              </div>
+              <script type="text/javascript">
+                function winr_start() {
+                  document.getElementById('winr_image').style.opacity = "1";
+                }
+                function winr_stop() {
+                  document.getElementById('winr_image').style.opacity = "0";
+                }
+                winr_stop()
+              </script>
+            </td>
+            <td style="padding:20px;width:75%;vertical-align:middle">
+              <a href="http://www.matthewtancik.com/learnit">
+                <papertitle>Learned Initializations for Optimizing Coordinate-Based Neural Representations</papertitle>
+              </a>
+              <br>
+              <a href="http://matthewtancik.com/">Matthew Tancik*</a>,
+              <a href="https://bmild.github.io/">Ben Mildenhall*</a>,
+              <a href="https://www.linkedin.com/in/terrance-wang/">Terrance Wang</a>,
+              <a href="https://www.linkedin.com/in/divi-schmidt-262044180/">Divi Schmidt</a>, <br>
+              <a href="https://people.eecs.berkeley.edu/~pratul/">Pratul Srinivasan</a>,
+              <strong>Jonathan T. Barron</strong>,
+              <a href="https://www2.eecs.berkeley.edu/Faculty/Homepages/yirenng.html">Ren Ng</a>
+              <br>
+              <em>CVPR</em>, 2021 &nbsp <font color="red"><strong>(Oral Presentation)</strong></font>
+              <br>
+              <a href="http://www.matthewtancik.com/learnit">project page</a> /
+              <a href="https://www.youtube.com/watch?v=A-r9itCzcyo">video</a> /
+              <a href="https://arxiv.org/abs/2012.02189">arXiv</a> 
+              <p></p>
+              <p>Using meta-learning to find weight initializations for coordinate-based MLPs allows them to converge faster and generalize better.</p>
+            </td>
+          </tr>
+
+          <tr onmouseout="nerfw_stop()" onmouseover="nerfw_start()">
+            <td style="padding:20px;width:25%;vertical-align:middle">
+              <div class="one">
+                <div class="two" id='nerfw_image'><video  width=100% height=100% muted autoplay loop>
+                <source src="images/nerfw_after.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+                </video></div>
+                <img src='images/nerfw_before.jpg' width="160">
+              </div>
+              <script type="text/javascript">
+                function nerfw_start() {
+                  document.getElementById('nerfw_image').style.opacity = "1";
+                }
+
+                function nerfw_stop() {
+                  document.getElementById('nerfw_image').style.opacity = "0";
+                }
+                nerfw_stop()
+              </script>
+            </td>
+            <td style="padding:20px;width:75%;vertical-align:middle">
+              <a href="https://nerf-w.github.io/">
+                <papertitle>NeRF in the Wild: Neural Radiance Fields for Unconstrained Photo Collections</papertitle>
+              </a>
+              <br>
+              <a href="http://www.ricardomartinbrualla.com/">Ricardo Martin-Brualla*</a>,
+              <a href="https://scholar.google.com/citations?user=g98QcZUAAAAJ&hl=en">Noha Radwan*</a>,
+              <a href="https://research.google/people/105804/">Mehdi S. M. Sajjadi*</a>, <br>
+              <strong>Jonathan T. Barron</strong>,
+              <a href="https://scholar.google.com/citations?user=FXNJRDoAAAAJ&hl=en">Alexey Dosovitskiy</a>,
+              <a href="http://www.stronglyconvex.com/about.html">Daniel Duckworth</a>
+              <br>
+              <em>CVPR</em>, 2021 &nbsp <font color="red"><strong>(Oral Presentation)</strong></font>
+              <br>
+              <a href="https://nerf-w.github.io/">project page</a> /
+              <a href="https://arxiv.org/abs/2008.02268">arXiv</a> /
+              <a href="https://www.youtube.com/watch?v=mRAKVQj5LRA">video</a>
+              <p></p>
+              <p>Letting NeRF reason about occluders and appearance variation produces photorealistic view synthesis using only unstructured internet photos.</p>
+            </td>
+          </tr> 
+
+          <tr onmouseout="inerf_stop()" onmouseover="inerf_start()">
+            <td style="padding:20px;width:25%;vertical-align:middle">
+              <div class="one">
+                <div class="two" id='inerf_image'><video  width=100% height=100% muted autoplay loop>
+                <source src="images/inerf_after.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+                </video></div>
+                <img src='images/inerf_before.jpg' width="160">
+              </div>
+              <script type="text/javascript">
+                function inerf_start() {
+                  document.getElementById('inerf_image').style.opacity = "1";
+                }
+                function inerf_stop() {
+                  document.getElementById('inerf_image').style.opacity = "0";
+                }
+                inerf_stop()
+              </script>
+            </td>
+            <td style="padding:20px;width:75%;vertical-align:middle">
+              <a href="http://yenchenlin.me/inerf/">
+                <papertitle>iNeRF: Inverting Neural Radiance Fields for Pose Estimation</papertitle>
+              </a>
+              <br>
+              <a href="https://yenchenlin.me/">Lin Yen-Chen</a>, 
+              <a href="http://www.peteflorence.com/">Pete Florence</a>, 
+              <strong>Jonathan T. Barron</strong>,  <br>
+              <a href="https://meche.mit.edu/people/faculty/ALBERTOR@MIT.EDU">Alberto Rodriguez</a>,
+              <a href="http://web.mit.edu/phillipi/">Phillip Isola</a>,
+              <a href="https://scholar.google.com/citations?user=_BPdgV0AAAAJ&hl=en">Tsung-Yi Lin</a>
+              <br>
+              <em>arXiv</em>, 2020  
+              <br>
+              <a href="http://yenchenlin.me/inerf/">project page</a> /
+              <a href="https://arxiv.org/abs/2012.05877">arXiv</a> /
+              <a href="https://www.youtube.com/watch?v=eQuCZaQN0tI">video</a>
+              <p></p>
+              <p>Given an image of an object and a NeRF of that object, you can estimate that object's pose.
+              </p>
+            </td>
+          </tr> 
+
+
+          <tr onmouseout="nerd_stop()" onmouseover="nerd_start()">
+            <td style="padding:20px;width:25%;vertical-align:middle">
+              <div class="one">
+                <div class="two" id='nerd_image'><video  width=100% height=100% muted autoplay loop>
+                <source src="images/nerd_160.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+                </video></div>
+                <img src='images/nerd_160.jpg' width="160">
+              </div>
+              <script type="text/javascript">
+                function nerd_start() {
+                  document.getElementById('nerd_image').style.opacity = "1";
+                }
+
+                function nerd_stop() {
+                  document.getElementById('nerd_image').style.opacity = "0";
+                }
+                nerd_stop()
+              </script>
+            </td>
+            <td style="padding:20px;width:75%;vertical-align:middle">
+              <a href="https://markboss.me/publication/2021-nerd/">
+                <papertitle>NeRD: Neural Reflectance Decomposition from Image Collections</papertitle>
+              </a>
+              <br>
+
+              <a href="https://markboss.me">Mark Boss</a>, 
+              <a href="https://uni-tuebingen.de/en/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/computergrafik/lehrstuhl/mitarbeiter/raphael-braun/">Raphael Braun</a>,
+              <a href="https://varunjampani.github.io">Varun Jampani</a>,
+              <strong>Jonathan T. Barron</strong>,
+              <a href="http://people.csail.mit.edu/celiu/">Ce Liu</a>,
+              <a href="https://uni-tuebingen.de/en/faculties/faculty-of-science/departments/computer-science/lehrstuehle/computergrafik/computer-graphics/staff/prof-dr-ing-hendrik-lensch/">Hendrik P. A. Lensch</a>
+              <br>
+              <em>arXiv</em>, 2020
+              <br>
+              <a href="https://markboss.me/publication/2021-nerd/">project page</a> /
+              <a href="https://www.youtube.com/watch?v=JL-qMTXw9VU">video</a> /
+              <a href="https://github.com/cgtuebingen/NeRD-Neural-Reflectance-Decomposition">code</a> /
+              <a href="https://arxiv.org/abs/2012.03918">arXiv</a>
+              <p></p>
+              <p>
+              A NeRF-like model that can decompose (and mesh) objects with non-Lambertian reflectances, complex geometry, and unknown illumination.
+              </p>
+            </td>
+          </tr>
+
+
+          <tr onmouseout="nerfie_stop()" onmouseover="nerfie_start()">
+            <td style="padding:20px;width:25%;vertical-align:middle">
+              <div class="one">
+                <div class="two" id='nerfie_image'><video  width=100% height=100% muted autoplay loop>
+                <source src="images/nerfie_after.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+                </video></div>
+                <img src='images/nerfie_before.jpg' width="160">
+              </div>
+              <script type="text/javascript">
+                function nerfie_start() {
+                  document.getElementById('nerfie_image').style.opacity = "1";
+                }
+                function nerfie_stop() {
+                  document.getElementById('nerfie_image').style.opacity = "0";
+                }
+                nerfie_stop()
+              </script>
+            </td>
+            <td style="padding:20px;width:75%;vertical-align:middle">
+              <a href="https://nerfies.github.io/">
+                <papertitle>Deformable Neural Radiance Fields</papertitle>
+              </a>
+              <br>
+              
+              <a href="https://keunhong.com">Keunhong Park</a>,
+              <a href="https://utkarshsinha.com">Utkarsh Sinha</a>,
+              <strong>Jonathan T. Barron</strong>,
+              <a href="http://sofienbouaziz.com">Sofien Bouaziz</a>, <br>
+              <a href="https://www.danbgoldman.com">Dan B Goldman</a>,
+              <a href="https://homes.cs.washington.edu/~seitz/">Steven M. Seitz</a>,
+              <a href="http://www.ricardomartinbrualla.com">Ricardo-Martin Brualla</a>
+              <br>
+              <em>arXiv</em>, 2020  
+              <br>
+              <a href="https://nerfies.github.io/">project page</a> /
+              <a href="https://arxiv.org/abs/2011.12948">arXiv</a> /
+              <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA">video</a>
+              <p></p>
+              <p>Building deformation fields into NeRF lets you capture non-rigid subjects, like people.
+              </p>
+            </td>
+          </tr> 
+
+
+        </tbody></table>
+
+        <table width="100%" align="center" border="0" cellspacing="0" cellpadding="20"><tbody>
+          <tr>
+            <td>
+              <heading>Teaching Experience</heading>
+            </td>
+          </tr>
+        </tbody></table>
+        <table width="100%" align="center" border="0" cellpadding="20"><tbody>
+          <tr>
+            <td style="padding:20px;width:25%;vertical-align:middle"><img src="images/cvf.jpg"></td>
+            <td width="75%" valign="center">
+              <a href="http://cvpr2021.thecvf.com/area-chairs">Area Chair, CVPR 2021</a>
+              <br><br>
+              <a href="http://cvpr2019.thecvf.com/area_chairs">Area Chair, CVPR 2019</a>
+              <br><br>
+              <a href="http://cvpr2018.thecvf.com/organizers/area_chairs">Area Chair, CVPR 2018</a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px;width:25%;vertical-align:middle">
+              <img src="images/cs188.jpg" alt="cs188">
+            </td>
+            <td width="75%" valign="center">
+              <a href="http://inst.eecs.berkeley.edu/~cs188/sp11/announcements.html">Graduate Student Instructor, CS188 Spring 2011</a>
+              <br>
+              <br>
+              <a href="http://inst.eecs.berkeley.edu/~cs188/fa10/announcements.html">Graduate Student Instructor, CS188 Fall 2010</a>
+              <br>
+              <br>
+              <a href="http://aima.cs.berkeley.edu/">Figures, "Artificial Intelligence: A Modern Approach", 3rd Edition</a>
+            </td>
+          </tr>
+        </tbody></table>
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+          <tr>
+            <td style="padding:0px">
+              <br>
+              <p style="text-align:right;font-size:small;">
+
+                <br>
+                Cloned template from <a href="https://jonbarron.info/">here</a>.
+              </p>
+            </td>
+          </tr>
+        </tbody></table>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>
