@@ -58,92 +58,36 @@
         </tbody></table>
         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
 
-          <tr onmouseout="mipnerf_stop()" onmouseover="mipnerf_start()"  bgcolor="#ffffd0">
+          <tr onmouseout="gt_stop()" onmouseover="gt_start()">
             <td style="padding:20px;width:25%;vertical-align:middle">
               <div class="one">
-                <div class="two" id='mipnerf_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/mipnerf_ipe_yellow.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img src='images/mipnerf_ipe_yellow.png' width="160">
+                <div class="two" id='gt_image'>
+                  <img src='images/gt_after.jpg' width="160"></div>
+                <img src='images/gt_before.jpg' width="160">
               </div>
               <script type="text/javascript">
-                function mipnerf_start() {
-                  document.getElementById('mipnerf_image').style.opacity = "1";
+                function gt_start() {
+                  document.getElementById('gt_image').style.opacity = "1";
                 }
 
-                function mipnerf_stop() {
-                  document.getElementById('mipnerf_image').style.opacity = "0";
+                function gt_stop() {
+                  document.getElementById('gt_image').style.opacity = "0";
                 }
-                mipnerf_stop()
+                gt_stop()
               </script>
             </td>
             <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="http://jonbarron.info/mipnerf">
-                <papertitle>Mip-NeRF: A Multiscale Representation for Anti-Aliasing Neural Radiance Fields</papertitle>
+              <a href="https://doi.org/10.1016/j.mechmachtheory.2021.104258">
+                <papertitle>Kinematic comparison of single degree-of-freedom robotic gait trainers</papertitle>
               </a>
               <br>
-              <strong>Jonathan T. Barron</strong>,
-              <a href="https://bmild.github.io/">Ben Mildenhall</a>,
-              <a href="http://matthewtancik.com/">Matthew Tancik</a>, <br>
-              <a href="https://phogzone.com/">Peter Hedman</a>,
-              <a href="http://www.ricardomartinbrualla.com/">Ricardo Martin-Brualla</a>,
-              <a href="https://pratulsrinivasan.github.io/">Pratul Srinivasan</a>
+              <strong>Jeonghwan Lee</strong>, Lailu Li, Sung Yul Shin, Ashish D Deshpande, James Sulzer
               <br>
-              <em>arXiv</em>, 2021 
+              <em>Mechanism and Machine Theory</em>, 2021
               <br>
-              <a href="http://jonbarron.info/mipnerf">project page</a>
-              /
-              <a href="https://arxiv.org/abs/2103.13415">arXiv</a>
-              /
-              <a href="https://youtu.be/EpH175PY1A0">video</a>
+              <a href="data/2021_Mech Mach Theory.pdf">PDF</a>
               <p></p>
-              <p>NeRF is aliased, but we can anti-alias it by casting cones and prefiltering the positional encoding function.</p>
-            </td>
-          </tr> 
-
-          <tr onmouseout="ibrnet_stop()" onmouseover="ibrnet_start()">
-            <td style="padding:20px;width:25%;vertical-align:middle">
-              <div class="one">
-                <div class="two" id='ibrnet_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/ibrnet_after.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img src='images/ibrnet_before.jpg' width="160">
-              </div>
-              <script type="text/javascript">
-                function ibrnet_start() {
-                  document.getElementById('ibrnet_image').style.opacity = "1";
-                }
-
-                function ibrnet_stop() {
-                  document.getElementById('ibrnet_image').style.opacity = "0";
-                }
-                ibrnet_stop()
-              </script>
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://ibrnet.github.io/">
-                <papertitle>IBRNet: Learning Multi-View Image-Based Rendering</papertitle>
-              </a>
-              <br>
-              <a href="https://www.cs.cornell.edu/~qqw/">Qianqian Wang</a>,
-              <a href="https://www.linkedin.com/in/zhicheng-wang-96116897/">Zhicheng Wang</a>,
-              <a href="https://www.kylegenova.com/">Kyle Genova</a>,
-              <a href="https://people.eecs.berkeley.edu/~pratul/">Pratul Srinivasan</a>,
-              <a href="https://scholar.google.com/citations?user=Rh9T3EcAAAAJ&hl=en">Howard Zhou</a>, <br>
-              <strong>Jonathan T. Barron</strong>, 
-              <a href="http://www.ricardomartinbrualla.com/">Ricardo Martin-Brualla</a>,
-              <a href="https://www.cs.cornell.edu/~snavely/">Noah Snavely</a>, 
-              <a href="https://www.cs.princeton.edu/~funk/">Thomas Funkhouser</a>
-              <br>
-              <em>CVPR</em>, 2021
-              <br>
-              <a href="https://ibrnet.github.io/">project page</a> /
-              <a href="https://arxiv.org/abs/2102.13090">arXiv</a>
               <p></p>
-              <p>By learning how to pay attention to input images at render time, 
-                  we can amortize inference for view synthesis and reduce error rates by 15%.</p>
             </td>
           </tr>
 
