@@ -54,16 +54,82 @@
         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
             <tr>
             <td style="padding:20px;width:100%;vertical-align:middle">
-              <heading>Research Interests</heading>
+              <heading>Research</heading>
               <p>
-                I am interested in Data Science, Design Optimization, Biomechanics and Robotics.               
-                My Ph.D. works include characterizing pathological gait after neurological impairment by machine learning and exploring optimal design parameters to design a transparent rigid robotic gait trainer for post-stroke gait rehabilitation computationally and experimentally.
-                Prior to this, I also contributed to projects related to computer-assisted surgery and medical image processing. 
+                My research interests broadly lie in Rehabilitation Engineering, focusing on data-driven, personalized solutions through wearable devices and sensing. 
               </p>
             </td>
           </tr>
         </tbody></table>
         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+
+          <tr onmouseout="rf_stop()" onmouseover="rf_start()">
+            <td style="padding:10px;width:25%;vertical-align:middle">
+              <div class="one">
+                <div class="two" id='rf_image'>
+                  <img src='images/rf_after.jpg' width="170"></div>
+                <img src='images/rf_before.jpg' width="170">
+              </div>
+              <script type="text/javascript">
+                function rf_start() {
+                  document.getElementById('dt_image').style.opacity = "1";
+                }
+
+                function rf_stop() {
+                  document.getElementById('dt_image').style.opacity = "0";
+                }
+                rf_stop()
+              </script>
+            </td>
+            <td style="padding:10px;width:75%;vertical-align:top">
+              <br>
+              <a href="https://doi.org/10.1007/s10439-023-03217-x">
+                <papertitle>Hip and Knee Joint Kinematics Predict Quadriceps Hyperreflexia in People with Post-stroke Stiff-Knee Gait</papertitle>
+              </a>
+              <br><strong>Jeonghwan Lee</strong>, Tunc Akbas and James Sulzer
+              <br>
+              <em>Annals of Biomedical Engineering</em>, 2023
+              <br>
+              <a href="data/2023_ABME.pdf">PDF</a>
+              <p></p>
+              <p></p>
+            </td>
+          </tr>
+
+          <tr onmouseout="dt_stop()" onmouseover="dt_start()">
+            <td style="padding:10px;width:25%;vertical-align:middle">
+              <div class="one">
+                <div class="two" id='dt_image'>
+                  <img src='images/dt_after.jpg' width="170"></div>
+                <img src='images/dt_before.jpg' width="170">
+              </div>
+              <script type="text/javascript">
+                function dt_start() {
+                  document.getElementById('dt_image').style.opacity = "1";
+                }
+
+                function dt_stop() {
+                  document.getElementById('dt_image').style.opacity = "0";
+                }
+                dt_stop()
+              </script>
+            </td>
+            <td style="padding:10px;width:75%;vertical-align:top">
+              <br>
+              <a href="https://doi.org/10.1109/JSEN.2022.3227475">
+                <papertitle>The effect of biomechanical features on classification of dual-task gait</papertitle>
+              </a>
+              <br>Mark Chiarello, <strong>Jeonghwan Lee</strong>, Mandy McClintock Salinas, Robin C. Hilsabeck,
+              Jarrod Lewis-Peacock, and James Sulzer
+              <br>
+              <em>IEEE Sensors Journal</em>, 2022
+              <br>
+              <a href="data/2022_IEEE_Sensors.pdf">PDF</a>
+              <p></p>
+              <p></p>
+            </td>
+          </tr>
+
           <tr onmouseout="dt_stop()" onmouseover="dt_start()">
             <td style="padding:10px;width:25%;vertical-align:middle">
               <div class="one">
