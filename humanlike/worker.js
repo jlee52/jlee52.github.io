@@ -59,6 +59,17 @@ webapi.run_json(target, webapi.kind_of(target), options_json, progress=report)
   return JSON.parse(out);
 }
 
+async function minari(options) {
+  py.globals.set("options_json", JSON.stringify(options));
+  const out = py.runPython(`
+import json
+from humanlike import webapi
+name, data = webapi.minari_zip(target, webapi.kind_of(target), json.loads(options_json))
+(name, data)
+`).toJs();
+  return { name: out[0], bytes: out[1] };
+}
+
 onmessage = async (e) => {
   const m = e.data;
   try {
@@ -66,6 +77,7 @@ onmessage = async (e) => {
     if (m.type === "init") await init(m.id);
     else if (m.type === "inspect") result = await inspect(m.files);
     else if (m.type === "run") result = await run(m.id, m.options);
+    else if (m.type === "minari") result = await minari(m.options);
     postMessage({ id: m.id, type: "done", result });
   } catch (err) {
     postMessage({ id: m.id, type: "error", message: String(err.message || err).split("\n").slice(-6).join("\n") });
