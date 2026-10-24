@@ -1,0 +1,7 @@
+{
+ "name": "AMP example",
+ "files": [
+  "amp-example-v0/data/main_data.hdf5",
+  "amp-example-v0/data/metadata.json"
+ ]
+}

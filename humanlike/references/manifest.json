@@ -1,0 +1,42 @@
+{
+ "version": "1",
+ "references": {
+  "camargo-treadmill/gait": {
+   "kind": "gait",
+   "file": "camargo-treadmill.gait.npz",
+   "sha256": "c131c32b0b4fae8ac3a619e434284e9fdda4cfa083f47ad0131d8990e0df64a8",
+   "source": "Camargo et al. 2021, J Biomech 119:110320",
+   "license": "CC BY 4.0",
+   "redistribute": true,
+   "restrict_speed": true,
+   "description": "Each subject's mean stride length and frequency at each treadmill speed (0.5-2.05 m/s)"
+  },
+  "camargo-treadmill/feedback": {
+   "kind": "feedback",
+   "file": "camargo-treadmill.feedback.npz",
+   "sha256": "e776903bcdcaf6bc8af4e7533f433e3aa77f799773d1f9b9a3a6f144e0c72281",
+   "source": "Camargo et al. 2021, J Biomech 119:110320",
+   "license": "CC BY 4.0",
+   "redistribute": true,
+   "description": "Foot-placement fits per subject (OOD human reference)"
+  },
+  "camargo-treadmill/sagittal": {
+   "kind": "sagittal",
+   "file": "camargo-treadmill.sagittal.npz",
+   "sha256": "433d17fe462eba2a095ab3d9e668deb3504a01c450f39d1a0c24cb5b68e025fb",
+   "source": "Camargo et al. 2021, J Biomech 119:110320",
+   "license": "CC BY 4.0",
+   "redistribute": true,
+   "description": "Each subject's mean sagittal hip, knee and ankle angles over the gait cycle (101 points from foot strike) at each treadmill speed 0.5-1.85 m/s"
+  },
+  "camargo-treadmill/kinetics": {
+   "kind": "kinetics",
+   "file": "camargo-treadmill.kinetics.npz",
+   "sha256": "6a2667d007421b3f89fe1d707b08129d3b9912aa22576e846f81951cc08679e1",
+   "source": "Camargo et al. 2021, J Biomech 119:110320",
+   "license": "CC BY 4.0",
+   "redistribute": true,
+   "description": "Per-stride GRF, joint-work and centre-of-mass features (humanlike.kinetics.FEATURES) of the treadmill walking at 0.5-2.05 m/s, with each subject's mass and leg length"
+  }
+ }
+}

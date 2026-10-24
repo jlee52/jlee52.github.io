@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Humanlike locomotion benchmark</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <header>
+    <h1>Humanlike locomotion benchmark</h1>
+    <p class="sub">Feedforward, feedback and energetic signatures of human walking, joint angles and kinetics, for your
+      simulated or captured locomotion.</p>
+    <p id="runtime" class="badge">Starting…</p>
+  </header>
+
+  <section id="step-upload">
+    <h2><span class="num">1</span> Data</h2>
+    <div id="drop" class="drop" tabindex="0">
+      <p><b>Drop a file here</b> or choose one</p>
+      <p class="hint">Minari dataset folder (humanlike profile) · C3D · BVH · CSV</p>
+      <div class="row">
+        <label class="btn">File…<input id="pick-file" type="file" accept=".c3d,.bvh,.csv,.txt" hidden></label>
+        <label class="btn">Minari dataset folder…<input id="pick-dir" type="file" webkitdirectory hidden></label>
+        <button id="demo" class="btn link" type="button">Try an example</button>
+      </div>
+    </div>
+    <p id="file-info" class="info" hidden></p>
+  </section>
+
+  <section id="step-map" hidden>
+    <h2><span class="num">2</span> Mapping</h2>
+    <p class="hint" id="map-hint"></p>
+    <form id="map-form" class="grid-form"></form>
+  </section>
+
+  <section id="step-run" hidden>
+    <h2><span class="num">3</span> Evaluate</h2>
+    <button id="run" class="btn primary" type="button">Run the analyses</button>
+    <ol id="progress" class="progress"></ol>
+    <p id="error" class="error" hidden></p>
+  </section>
+
+  <section id="step-results" hidden>
+    <h2>Results</h2>
+    <div id="summary" class="cards"></div>
+    <div id="notes"></div>
+    <div class="row">
+      <button id="dl-report" class="btn" type="button">Download report (HTML)</button>
+      <button id="dl-json" class="btn" type="button">Download results (JSON)</button>
+    </div>
+    <iframe id="report" title="Report" sandbox="allow-same-origin"></iframe>
+  </section>
+
+  <footer>
+    <p>Input: the <a href="https://github.com/jlee52/humanlike-eval/blob/main/docs/oss/PROFILE.md">humanlike locomotion
+      profile</a>. In the browser the analyses run locally (Pyodide); nothing is uploaded. For large data sets run
+      <code>humanlike serve</code> on your computer.</p>
+  </footer>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
