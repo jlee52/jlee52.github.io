@@ -21,12 +21,16 @@
       <p><b>Drop a file here</b> or choose one</p>
       <p class="hint">Minari dataset folder (humanlike profile) · C3D · BVH · CSV</p>
       <div class="row">
-        <label class="btn">File…<input id="pick-file" type="file" accept=".c3d,.bvh,.csv,.txt" hidden></label>
-        <label class="btn">Minari dataset folder…<input id="pick-dir" type="file" webkitdirectory hidden></label>
-        <button id="demo" class="btn link" type="button">Try an example</button>
+        <label class="btn">Files…<input id="pick-file" type="file" accept=".c3d,.bvh,.csv,.txt" multiple hidden></label>
+        <label class="btn">Folder (Minari dataset, or C3D / BVH / CSV files)…<input id="pick-dir" type="file" webkitdirectory hidden></label>
       </div>
+
     </div>
     <p id="file-info" class="info" hidden></p>
+    <div id="examples" hidden>
+      <h3>Or try an example <span class="hint">(loads and runs in one click)</span></h3>
+      <div id="example-list" class="examples"></div>
+    </div>
   </section>
 
   <section id="step-map" hidden>
@@ -54,8 +58,8 @@
   </section>
 
   <footer>
-    <p>Input: the <a href="https://github.com/jlee52/humanlike-eval/blob/main/docs/oss/PROFILE.md">humanlike locomotion
-      profile</a>. In the browser the analyses run locally (Pyodide); nothing is uploaded. For large data sets run
+    <p>Input: the <a href="doc.html?f=PROFILE">humanlike locomotion profile</a> (Minari) or
+      <a href="doc.html?f=ADAPTERS">motion capture and other sources</a>. In the browser the analyses run locally (Pyodide); nothing is uploaded. For large data sets run
       <code>humanlike serve</code> on your computer.</p>
   </footer>
 </main>

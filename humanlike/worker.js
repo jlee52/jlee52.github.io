@@ -38,10 +38,11 @@ async function inspect(files) {
     py.FS.writeFile(dst, new Uint8Array(await file.arrayBuffer()));
   }
   const first = files[0].path;
-  target = first.includes("/") ? "/data/" + first.split("/")[0] : "/data/" + first;
-  if (first.includes("/")) {                          // a Minari folder: h5py or pyarrow on demand
-    const meta = files.find((f) => /(^|\/)(data\/)?metadata\.json$/.test(f.path) && f.path.split("/").length <= 3);
-    const fmt = meta ? JSON.parse(await meta.file.text()).data_format : "hdf5";
+  // a folder (Minari dataset, or files of one type), several files (a folder of them), or one file
+  target = first.includes("/") ? "/data/" + first.split("/")[0] : files.length > 1 ? "/data" : "/data/" + first;
+  const meta = files.find((f) => /(^|\/)(data\/)?metadata\.json$/.test(f.path) && f.path.split("/").length <= 3);
+  if (meta) {                                         // Minari: h5py or pyarrow on demand
+    const fmt = JSON.parse(await meta.file.text()).data_format;
     await py.loadPackage(fmt === "arrow" ? ["pyarrow"] : ["h5py"]);
   }
   py.globals.set("target", target);

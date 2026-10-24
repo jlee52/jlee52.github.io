@@ -4,7 +4,7 @@
 "use strict";
 
 const $ = (id) => document.getElementById(id);
-const state = { files: null, info: null, result: null, runtime: null };
+const state = { files: null, info: null, result: null, runtime: null, examples: [], preset: null };
 const STAGE_TITLES = {
   events: "Foot strikes", gait_summary: "Speed and stride parameters", gait_scaling: "Feedforward signature",
   foot_placement: "Foot-placement model", feedback: "Feedback signature", energetics: "Energetic signature",
@@ -90,20 +90,23 @@ async function start() {
 }
 
 // ---- step 1: data ---------------------------------------------------------------------------------
-async function choose(files) {
+async function choose(files, fromUser = false) {
   if (!files || !files.length) return;
+  if (fromUser) state.preset = null;
   state.files = files; state.result = null;
   ["step-map", "step-run", "step-results"].forEach((s) => ($(s).hidden = true));
   const first = files[0], dir = relPath(first).includes("/") ? relPath(first).split("/")[0] : null;
   $("file-info").hidden = false;
-  $("file-info").textContent = dir ? `Folder ${dir} (${files.length} files)` : `${first.name} (${(first.size / 1e6).toFixed(1)} MB)`;
+  $("file-info").textContent = dir && files.length > 1 ? `Folder ${dir} (${files.length} files)` :
+    files.length > 1 ? `${files.length} files` : `${first.name} (${(first.size / 1e6).toFixed(1)} MB)`;
   try {
     if (!state.runtime) await waitRuntime();
     $("file-info").textContent += " · reading…";
     state.info = await state.runtime.inspect(files);
     $("file-info").textContent = $("file-info").textContent.replace(" · reading…", ` · ${describe(state.info)}`);
     buildForm(state.info);
-  } catch (e) { showError(e); }
+    return true;
+  } catch (e) { showError(e); return false; }
 }
 
 function waitRuntime() {
@@ -111,8 +114,9 @@ function waitRuntime() {
 }
 
 function describe(i) {
-  if (i.kind === "c3d") return `C3D, ${i.labels.length} markers, ${i.frames} frames at ${i.rate} Hz, ${i.plates} force plates`;
-  if (i.kind === "bvh") return `BVH, ${i.joints.length} joints, ${i.frames} frames at ${i.rate.toFixed(0)} Hz`;
+  if (i.kind === "c3d") return `C3D, ${n}${i.labels.length} markers, ${i.frames} frames at ${i.rate} Hz, ${i.plates} force plates`;
+  const n = i.files && i.files.length > 1 ? `${i.files.length} files; first: ` : "";
+  if (i.kind === "bvh") return `BVH, ${n}${i.joints.length} joints, ${i.frames} frames at ${i.rate.toFixed(0)} Hz`;
   if (i.kind === "csv") return `CSV, ${i.header.length} columns`;
   if (i.kind === "minari") return `Minari dataset ${i.dataset_id || ""}, ${i.episodes} episodes (${i.data_format})`;
   return `${i.rollouts} rollouts`;
@@ -164,10 +168,15 @@ function buildForm(i) {
         (p.mass_kg ? `, mass ${(+p.mass_kg).toFixed(1)} kg` : "") + ".");
     }
   }
-  const mass = i.kind === "minari" && i.profile && i.profile.mass_kg ? "" : "";
-  f.push(field("Body mass (kg)", num("mass_kg", "needed for energetics and kinetics", mass)));
+  const known = i.kind === "minari" && i.profile && i.profile.mass_kg;
+  f.push(field("Body mass (kg)", num("mass_kg", known ? "from the dataset" : "needed for energetics and kinetics",
+    i.mass_kg ? (+i.mass_kg).toFixed(1) : ""), i.mass_kg ? "from the file" : ""));
   f.push(field("Leg length (m)", num("leg_length_m", "optional"), "hip joint centre to sole"));
   $("map-form").innerHTML = f.join("");
+  for (const [k, v] of Object.entries(state.preset || {})) {    // the example's mapping
+    const el = $("map-form").querySelector(`[name="${k}"]`);
+    if (el) el.value = v;
+  }
   const ps = $("map-form").querySelector('select[name="pelvis"][multiple]');
   if (ps) ps.onchange = () => ($("pelvis-sel").textContent = [...ps.selectedOptions].map((o) => o.value).join(", ") || "none selected");
   $("map-hint").textContent = hint.join(" ");
@@ -253,31 +262,57 @@ function showError(e) {
   $("error").hidden = false; $("error").textContent = String(e.message || e);
 }
 
-async function demo() {                        // a Minari dataset with the humanlike profile
+const FORMAT = { "amp-kinetics": "AMP · Minari", "amp-positions": "AMP · Minari", "camargo-c3d": "C3D", "cmu-bvh": "BVH" };
+
+async function loadExamples() {
   try {
-    const r = await fetch("examples/example.json");
-    if (!r.ok) throw new Error("no example in this deployment");
-    const files = [];
-    for (const rel of (await r.json()).files) {
-      const b = await (await fetch("examples/" + rel)).blob();
-      const f = new File([b], rel.split("/").pop());
+    const r = await fetch("examples/examples.json");
+    if (!r.ok) throw new Error();
+    state.examples = (await r.json()).examples;
+    $("example-list").innerHTML = state.examples.map((e, k) =>
+      `<button class="example" type="button" data-k="${k}"><span class="tag">${esc(FORMAT[e.id] || e.id)}</span>` +
+      `<b>${esc(e.title)}</b><span class="d">${esc(e.description)}</span><span class="d">${(e.bytes / 1e6).toFixed(1)} MB</span></button>`).join("");
+    $("example-list").querySelectorAll(".example").forEach((b) => (b.onclick = () => runExample(+b.dataset.k)));
+    $("examples").hidden = !state.examples.length;
+  } catch { $("examples").hidden = true; }
+}
+
+async function runExample(k) {
+  const buttons = $("example-list").querySelectorAll(".example");
+  buttons.forEach((b) => (b.disabled = true));
+  try {
+    if (!state.runtime) await waitRuntime();
+    if (await demo(k)) await run();
+  } finally { buttons.forEach((b) => (b.disabled = false)); }
+}
+
+async function demo(index) {
+  const e = state.examples[index];
+  if (!e) { showError(new Error("no example in this deployment")); return false; }
+  try {
+    $("file-info").hidden = false; $("file-info").textContent = `Downloading the example (${(e.bytes / 1e6).toFixed(1)} MB)…`;
+    const files = await Promise.all(e.files.map(async (rel) => {
+      const f = new File([await (await fetch("examples/" + rel)).blob()], rel.split("/").pop());
       f.relPath = rel;
-      files.push(f);
-    }
-    await choose(files);
-  } catch (e) { showError(e); }
+      return f;
+    }));
+    state.preset = e.options || null;
+    return await choose(files);
+  } catch (err) { showError(err); return false; }
 }
 
 // ---- wiring ---------------------------------------------------------------------------------------
-$("pick-file").onchange = (e) => choose(e.target.files);
-$("pick-dir").onchange = (e) => choose(e.target.files);
+$("pick-file").onchange = (e) => choose(e.target.files, true);
+$("pick-dir").onchange = (e) => choose(e.target.files, true);
 $("run").onclick = run;
-$("demo").onclick = demo;
 $("dl-report").onclick = () => download(`${state.result.summary.name}_report.html`, state.result.report_html, "text/html");
 $("dl-json").onclick = () => download(`${state.result.summary.name}_results.json`, JSON.stringify(state.result.results, null, 1), "application/json");
 const drop = $("drop");
 drop.ondragover = (e) => { e.preventDefault(); drop.classList.add("over"); };
 drop.ondragleave = () => drop.classList.remove("over");
-drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove("over"); choose(e.dataTransfer.files); };
+drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove("over"); choose(e.dataTransfer.files, true); };
 start();
-if (new URLSearchParams(location.search).has("demo")) waitRuntime().then(async () => { await demo(); await run(); });
+loadExamples().then(() => {                      // ?demo=<example id> runs that example (tests)
+  const q = new URLSearchParams(location.search);
+  if (q.has("demo")) runExample(Math.max(0, state.examples.findIndex((e) => e.id === q.get("demo"))));
+});
