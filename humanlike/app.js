@@ -4,7 +4,7 @@
 "use strict";
 
 const $ = (id) => document.getElementById(id);
-const state = { files: null, info: null, result: null, runtime: null };
+const state = { files: null, info: null, result: null, runtime: null, examples: [], preset: null };
 const STAGE_TITLES = {
   events: "Foot strikes", gait_summary: "Speed and stride parameters", gait_scaling: "Feedforward signature",
   foot_placement: "Foot-placement model", feedback: "Feedback signature", energetics: "Energetic signature",
@@ -90,8 +90,9 @@ async function start() {
 }
 
 // ---- step 1: data ---------------------------------------------------------------------------------
-async function choose(files) {
+async function choose(files, fromUser = false) {
   if (!files || !files.length) return;
+  if (fromUser) state.preset = null;
   state.files = files; state.result = null;
   ["step-map", "step-run", "step-results"].forEach((s) => ($(s).hidden = true));
   const first = files[0], dir = relPath(first).includes("/") ? relPath(first).split("/")[0] : null;
@@ -111,8 +112,9 @@ function waitRuntime() {
 }
 
 function describe(i) {
-  if (i.kind === "c3d") return `C3D, ${i.labels.length} markers, ${i.frames} frames at ${i.rate} Hz, ${i.plates} force plates`;
-  if (i.kind === "bvh") return `BVH, ${i.joints.length} joints, ${i.frames} frames at ${i.rate.toFixed(0)} Hz`;
+  if (i.kind === "c3d") return `C3D, ${i.files ? i.files.length + " files; first: " : ""}${i.labels.length} markers, ${i.frames} frames at ${i.rate} Hz, ${i.plates} force plates`;
+  const n = i.files ? `${i.files.length} files; first: ` : "";
+  if (i.kind === "bvh") return `BVH, ${n}${i.joints.length} joints, ${i.frames} frames at ${i.rate.toFixed(0)} Hz`;
   if (i.kind === "csv") return `CSV, ${i.header.length} columns`;
   if (i.kind === "minari") return `Minari dataset ${i.dataset_id || ""}, ${i.episodes} episodes (${i.data_format})`;
   return `${i.rollouts} rollouts`;
@@ -164,10 +166,15 @@ function buildForm(i) {
         (p.mass_kg ? `, mass ${(+p.mass_kg).toFixed(1)} kg` : "") + ".");
     }
   }
-  const mass = i.kind === "minari" && i.profile && i.profile.mass_kg ? "" : "";
-  f.push(field("Body mass (kg)", num("mass_kg", "needed for energetics and kinetics", mass)));
+  const known = i.kind === "minari" && i.profile && i.profile.mass_kg;
+  f.push(field("Body mass (kg)", num("mass_kg", known ? "from the dataset" : "needed for energetics and kinetics",
+    i.mass_kg ? (+i.mass_kg).toFixed(1) : ""), i.mass_kg ? "from the file" : ""));
   f.push(field("Leg length (m)", num("leg_length_m", "optional"), "hip joint centre to sole"));
   $("map-form").innerHTML = f.join("");
+  for (const [k, v] of Object.entries(state.preset || {})) {    // the example's mapping
+    const el = $("map-form").querySelector(`[name="${k}"]`);
+    if (el) el.value = v;
+  }
   const ps = $("map-form").querySelector('select[name="pelvis"][multiple]');
   if (ps) ps.onchange = () => ($("pelvis-sel").textContent = [...ps.selectedOptions].map((o) => o.value).join(", ") || "none selected");
   $("map-hint").textContent = hint.join(" ");
@@ -253,24 +260,38 @@ function showError(e) {
   $("error").hidden = false; $("error").textContent = String(e.message || e);
 }
 
-async function demo() {                        // a Minari dataset with the humanlike profile
+async function loadExamples() {
   try {
-    const r = await fetch("examples/example.json");
-    if (!r.ok) throw new Error("no example in this deployment");
-    const files = [];
-    for (const rel of (await r.json()).files) {
-      const b = await (await fetch("examples/" + rel)).blob();
-      const f = new File([b], rel.split("/").pop());
+    const r = await fetch("examples/examples.json");
+    if (!r.ok) throw new Error();
+    state.examples = (await r.json()).examples;
+    $("example-pick").innerHTML = state.examples.map((e, k) =>
+      `<option value="${k}">${esc(e.title)} · ${(e.bytes / 1e6).toFixed(1)} MB</option>`).join("");
+    const show = () => ($("example-info").textContent = state.examples[$("example-pick").value]?.description || "");
+    $("example-pick").onchange = show; show();
+  } catch { $("example-pick").closest(".examples").hidden = true; }
+}
+
+async function demo(index) {
+  const e = state.examples[index ?? $("example-pick").value];
+  if (!e) return showError(new Error("no example in this deployment"));
+  try {
+    $("demo").disabled = true;
+    $("file-info").hidden = false; $("file-info").textContent = `Downloading the example (${(e.bytes / 1e6).toFixed(1)} MB)…`;
+    const files = await Promise.all(e.files.map(async (rel) => {
+      const f = new File([await (await fetch("examples/" + rel)).blob()], rel.split("/").pop());
       f.relPath = rel;
-      files.push(f);
-    }
+      return f;
+    }));
+    state.preset = e.options || null;
     await choose(files);
-  } catch (e) { showError(e); }
+  } catch (err) { showError(err); }
+  $("demo").disabled = false;
 }
 
 // ---- wiring ---------------------------------------------------------------------------------------
-$("pick-file").onchange = (e) => choose(e.target.files);
-$("pick-dir").onchange = (e) => choose(e.target.files);
+$("pick-file").onchange = (e) => choose(e.target.files, true);
+$("pick-dir").onchange = (e) => choose(e.target.files, true);
 $("run").onclick = run;
 $("demo").onclick = demo;
 $("dl-report").onclick = () => download(`${state.result.summary.name}_report.html`, state.result.report_html, "text/html");
@@ -278,6 +299,12 @@ $("dl-json").onclick = () => download(`${state.result.summary.name}_results.json
 const drop = $("drop");
 drop.ondragover = (e) => { e.preventDefault(); drop.classList.add("over"); };
 drop.ondragleave = () => drop.classList.remove("over");
-drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove("over"); choose(e.dataTransfer.files); };
+drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove("over"); choose(e.dataTransfer.files, true); };
 start();
-if (new URLSearchParams(location.search).has("demo")) waitRuntime().then(async () => { await demo(); await run(); });
+loadExamples().then(() => {
+  const q = new URLSearchParams(location.search);
+  if (!q.has("demo")) return;
+  const k = Math.max(0, state.examples.findIndex((e) => e.id === q.get("demo")));
+  $("example-pick").value = k;
+  waitRuntime().then(async () => { await demo(k); await run(); });
+});
