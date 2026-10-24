@@ -8,7 +8,7 @@
     "amp-kinetics-v0/data/main_data.hdf5",
     "amp-kinetics-v0/data/metadata.json"
    ],
-   "bytes": 10140023
+   "bytes": 8398733
   },
   {
    "id": "amp-positions",
@@ -18,7 +18,7 @@
     "amp-positions-v0/data/main_data.hdf5",
     "amp-positions-v0/data/metadata.json"
    ],
-   "bytes": 4498657
+   "bytes": 2698327
   },
   {
    "id": "camargo-c3d",

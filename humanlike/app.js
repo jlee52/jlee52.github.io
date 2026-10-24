@@ -30,6 +30,12 @@ class ServerRuntime {
     if (!r.ok) throw new Error(await r.text());
     return r.json();
   }
+  async minari(options) {
+    const r = await fetch(`api/minari?session=${this.session}`, { method: "POST", body: JSON.stringify(options) });
+    if (!r.ok) throw new Error(await r.text());
+    const name = (r.headers.get("Content-Disposition") || "").match(/filename="([^"]+)"/)?.[1] || "dataset.zip";
+    return { name, blob: await r.blob() };
+  }
   async run(options, onProgress) {
     const r = await fetch(`api/run?session=${this.session}`, { method: "POST", body: JSON.stringify(options) });
     if (!r.ok) throw new Error(await r.text());
@@ -53,7 +59,7 @@ class ServerRuntime {
 class PyodideRuntime {
   label = "In your browser (Pyodide) · data stay on this computer";
   init() {
-    this.worker = new Worker("worker.js?v=967216d8f3");
+    this.worker = new Worker("worker.js?v=cce6cfa4a6");
     this.pending = new Map(); this.seq = 0;
     this.worker.onmessage = (e) => {
       const m = e.data, p = this.pending.get(m.id);
@@ -73,6 +79,10 @@ class PyodideRuntime {
   }
   inspect(files) { return this.call("inspect", { files: [...files].map((f) => ({ file: f, path: relPath(f) })) }); }
   run(options, onProgress) { return this.call("run", { options }, onProgress); }
+  async minari(options) {
+    const out = await this.call("minari", { options });
+    return { name: out.name, blob: new Blob([out.bytes], { type: "application/zip" }) };
+  }
 }
 
 function setRuntime(text) { $("runtime").textContent = text; }
@@ -209,6 +219,7 @@ async function run() {
   $("error").hidden = true; $("progress").innerHTML = ""; $("step-results").hidden = true;
   let options;
   try { options = readForm(); } catch (e) { return showError(e); }
+  state.options = options;
   $("run").disabled = true;
   const t0 = performance.now();
   try {
@@ -306,6 +317,16 @@ $("pick-file").onchange = (e) => choose(e.target.files, true);
 $("pick-dir").onchange = (e) => choose(e.target.files, true);
 $("run").onclick = run;
 $("dl-report").onclick = () => download(`${state.result.summary.name}_report.html`, state.result.report_html, "text/html");
+$("dl-minari").onclick = async () => {
+  const b = $("dl-minari"); b.disabled = true; const label = b.textContent; b.textContent = "Writing the dataset…";
+  try {
+    const { name, blob } = await state.runtime.minari(state.options || {});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  } catch (e) { showError(e); }
+  b.disabled = false; b.textContent = label;
+};
 $("dl-json").onclick = () => download(`${state.result.summary.name}_results.json`, JSON.stringify(state.result.results, null, 1), "application/json");
 const drop = $("drop");
 drop.ondragover = (e) => { e.preventDefault(); drop.classList.add("over"); };

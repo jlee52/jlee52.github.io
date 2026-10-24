@@ -75,7 +75,7 @@ ground reaction forces per 30 Hz step); `fs` is then k / control period.
 ### Recording rollouts
 
 ```python
-import minari
+from humanlike.adapters.minari_io import collector, finish
 
 class MyEnv(gym.Env):                      # or a wrapper around an existing environment
     def step(self, action):
@@ -85,14 +85,16 @@ class MyEnv(gym.Env):                      # or a wrapper around an existing env
         return obs, reward, terminated, truncated, info
     # reset() returns the same keys and shapes in its info (the samples are not used)
 
-env = minari.DataCollector(MyEnv(), record_infos=True)
+env = collector(MyEnv())                    # minari.DataCollector with record_infos=True
 ...                                         # roll out the policy
-dataset = env.create_dataset("mylab/mypolicy-v0", algorithm_name="...", author="...")
-
-from humanlike.adapters.minari_io import annotate
-annotate("mylab/mypolicy-v0", fs=120.0, samples_per_step=4, mass_kg=70.0, up="z",
-         episodes=[{"group": "speed_1.1", "commanded_speed": 1.1}, ...])
+finish(env, "mylab/mypolicy-v0", fs=120.0, samples_per_step=4, mass_kg=70.0, algorithm_name="...",
+       episodes=[{"group": "speed_1.1", "commanded_speed": 1.1}, ...])   # adds the profile, checks the data
 ```
+
+`finish` reads the dataset back and stops with the reason if a signal is missing; a dataset recorded
+without `record_infos=True` is reported with how to fix it. For an existing dataset,
+`humanlike.adapters.minari_io.annotate(path, fs=..., samples_per_step=..., mass_kg=...)` adds the
+metadata (no minari package needed).
 
 ```bash
 humanlike validate mylab/mypolicy-v0        # a registered id or a dataset directory
@@ -100,5 +102,9 @@ humanlike evaluate mylab/mypolicy-v0 -o results/
 humanlike convert c3d trial.c3d mylab/s01-v0 --name S01 --mass 70   # motion capture to Minari (ADAPTERS.md)
 ```
 
-Install with `pip install "humanlike[minari]"`. Datasets written by `humanlike convert` hold the core
-positions as observations and a zero action placeholder; the profile signals are in the infos.
+Reading and writing HDF5 datasets need only h5py (also in the browser); recording with DataCollector and
+writing Arrow need `pip install "humanlike[minari]"`. Datasets written by `humanlike convert`, by
+`humanlike.adapters.minari_io.write` or by the web app's "Download the data as a Minari dataset" are for
+evaluation: they hold the core positions as observations and a zero action placeholder (marked
+`"evaluation_only": true` in the profile metadata), the profile signals are in the infos. They are
+written in the Minari 0.5 layout, compressed (gzip), and open with the minari package.
