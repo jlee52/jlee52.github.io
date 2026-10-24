@@ -53,7 +53,7 @@ class ServerRuntime {
 class PyodideRuntime {
   label = "In your browser (Pyodide) · data stay on this computer";
   init() {
-    this.worker = new Worker("worker.js");
+    this.worker = new Worker("worker.js?v=967216d8f3");
     this.pending = new Map(); this.seq = 0;
     this.worker.onmessage = (e) => {
       const m = e.data, p = this.pending.get(m.id);
@@ -114,8 +114,8 @@ function waitRuntime() {
 }
 
 function describe(i) {
-  if (i.kind === "c3d") return `C3D, ${n}${i.labels.length} markers, ${i.frames} frames at ${i.rate} Hz, ${i.plates} force plates`;
   const n = i.files && i.files.length > 1 ? `${i.files.length} files; first: ` : "";
+  if (i.kind === "c3d") return `C3D, ${n}${i.labels.length} markers, ${i.frames} frames at ${i.rate} Hz, ${i.plates} force plates`;
   if (i.kind === "bvh") return `BVH, ${n}${i.joints.length} joints, ${i.frames} frames at ${i.rate.toFixed(0)} Hz`;
   if (i.kind === "csv") return `CSV, ${i.header.length} columns`;
   if (i.kind === "minari") return `Minari dataset ${i.dataset_id || ""}, ${i.episodes} episodes (${i.data_format})`;
