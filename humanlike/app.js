@@ -97,14 +97,16 @@ async function choose(files, fromUser = false) {
   ["step-map", "step-run", "step-results"].forEach((s) => ($(s).hidden = true));
   const first = files[0], dir = relPath(first).includes("/") ? relPath(first).split("/")[0] : null;
   $("file-info").hidden = false;
-  $("file-info").textContent = dir ? `Folder ${dir} (${files.length} files)` : `${first.name} (${(first.size / 1e6).toFixed(1)} MB)`;
+  $("file-info").textContent = dir && files.length > 1 ? `Folder ${dir} (${files.length} files)` :
+    files.length > 1 ? `${files.length} files` : `${first.name} (${(first.size / 1e6).toFixed(1)} MB)`;
   try {
     if (!state.runtime) await waitRuntime();
     $("file-info").textContent += " · reading…";
     state.info = await state.runtime.inspect(files);
     $("file-info").textContent = $("file-info").textContent.replace(" · reading…", ` · ${describe(state.info)}`);
     buildForm(state.info);
-  } catch (e) { showError(e); }
+    return true;
+  } catch (e) { showError(e); return false; }
 }
 
 function waitRuntime() {
@@ -112,8 +114,8 @@ function waitRuntime() {
 }
 
 function describe(i) {
-  if (i.kind === "c3d") return `C3D, ${i.files ? i.files.length + " files; first: " : ""}${i.labels.length} markers, ${i.frames} frames at ${i.rate} Hz, ${i.plates} force plates`;
-  const n = i.files ? `${i.files.length} files; first: ` : "";
+  if (i.kind === "c3d") return `C3D, ${n}${i.labels.length} markers, ${i.frames} frames at ${i.rate} Hz, ${i.plates} force plates`;
+  const n = i.files && i.files.length > 1 ? `${i.files.length} files; first: ` : "";
   if (i.kind === "bvh") return `BVH, ${n}${i.joints.length} joints, ${i.frames} frames at ${i.rate.toFixed(0)} Hz`;
   if (i.kind === "csv") return `CSV, ${i.header.length} columns`;
   if (i.kind === "minari") return `Minari dataset ${i.dataset_id || ""}, ${i.episodes} episodes (${i.data_format})`;
@@ -260,23 +262,34 @@ function showError(e) {
   $("error").hidden = false; $("error").textContent = String(e.message || e);
 }
 
+const FORMAT = { "amp-kinetics": "AMP · Minari", "amp-positions": "AMP · Minari", "camargo-c3d": "C3D", "cmu-bvh": "BVH" };
+
 async function loadExamples() {
   try {
     const r = await fetch("examples/examples.json");
     if (!r.ok) throw new Error();
     state.examples = (await r.json()).examples;
-    $("example-pick").innerHTML = state.examples.map((e, k) =>
-      `<option value="${k}">${esc(e.title)} · ${(e.bytes / 1e6).toFixed(1)} MB</option>`).join("");
-    const show = () => ($("example-info").textContent = state.examples[$("example-pick").value]?.description || "");
-    $("example-pick").onchange = show; show();
-  } catch { $("example-pick").closest(".examples").hidden = true; }
+    $("example-list").innerHTML = state.examples.map((e, k) =>
+      `<button class="example" type="button" data-k="${k}"><span class="tag">${esc(FORMAT[e.id] || e.id)}</span>` +
+      `<b>${esc(e.title)}</b><span class="d">${esc(e.description)}</span><span class="d">${(e.bytes / 1e6).toFixed(1)} MB</span></button>`).join("");
+    $("example-list").querySelectorAll(".example").forEach((b) => (b.onclick = () => runExample(+b.dataset.k)));
+    $("examples").hidden = !state.examples.length;
+  } catch { $("examples").hidden = true; }
+}
+
+async function runExample(k) {
+  const buttons = $("example-list").querySelectorAll(".example");
+  buttons.forEach((b) => (b.disabled = true));
+  try {
+    if (!state.runtime) await waitRuntime();
+    if (await demo(k)) await run();
+  } finally { buttons.forEach((b) => (b.disabled = false)); }
 }
 
 async function demo(index) {
-  const e = state.examples[index ?? $("example-pick").value];
-  if (!e) return showError(new Error("no example in this deployment"));
+  const e = state.examples[index];
+  if (!e) { showError(new Error("no example in this deployment")); return false; }
   try {
-    $("demo").disabled = true;
     $("file-info").hidden = false; $("file-info").textContent = `Downloading the example (${(e.bytes / 1e6).toFixed(1)} MB)…`;
     const files = await Promise.all(e.files.map(async (rel) => {
       const f = new File([await (await fetch("examples/" + rel)).blob()], rel.split("/").pop());
@@ -284,16 +297,14 @@ async function demo(index) {
       return f;
     }));
     state.preset = e.options || null;
-    await choose(files);
-  } catch (err) { showError(err); }
-  $("demo").disabled = false;
+    return await choose(files);
+  } catch (err) { showError(err); return false; }
 }
 
 // ---- wiring ---------------------------------------------------------------------------------------
 $("pick-file").onchange = (e) => choose(e.target.files, true);
 $("pick-dir").onchange = (e) => choose(e.target.files, true);
 $("run").onclick = run;
-$("demo").onclick = demo;
 $("dl-report").onclick = () => download(`${state.result.summary.name}_report.html`, state.result.report_html, "text/html");
 $("dl-json").onclick = () => download(`${state.result.summary.name}_results.json`, JSON.stringify(state.result.results, null, 1), "application/json");
 const drop = $("drop");
@@ -301,10 +312,7 @@ drop.ondragover = (e) => { e.preventDefault(); drop.classList.add("over"); };
 drop.ondragleave = () => drop.classList.remove("over");
 drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove("over"); choose(e.dataTransfer.files, true); };
 start();
-loadExamples().then(() => {
+loadExamples().then(() => {                      // ?demo=<example id> runs that example (tests)
   const q = new URLSearchParams(location.search);
-  if (!q.has("demo")) return;
-  const k = Math.max(0, state.examples.findIndex((e) => e.id === q.get("demo")));
-  $("example-pick").value = k;
-  waitRuntime().then(async () => { await demo(k); await run(); });
+  if (q.has("demo")) runExample(Math.max(0, state.examples.findIndex((e) => e.id === q.get("demo"))));
 });

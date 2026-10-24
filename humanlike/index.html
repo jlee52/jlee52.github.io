@@ -24,13 +24,13 @@
         <label class="btn">Files…<input id="pick-file" type="file" accept=".c3d,.bvh,.csv,.txt" multiple hidden></label>
         <label class="btn">Folder (Minari dataset, or C3D / BVH / CSV files)…<input id="pick-dir" type="file" webkitdirectory hidden></label>
       </div>
-      <div class="row examples">
-        <select id="example-pick" aria-label="Example data"></select>
-        <button id="demo" class="btn link" type="button">Load the example</button>
-      </div>
-      <p id="example-info" class="hint"></p>
+
     </div>
     <p id="file-info" class="info" hidden></p>
+    <div id="examples" hidden>
+      <h3>Or try an example <span class="hint">(loads and runs in one click)</span></h3>
+      <div id="example-list" class="examples"></div>
+    </div>
   </section>
 
   <section id="step-map" hidden>
