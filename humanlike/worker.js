@@ -3,6 +3,7 @@
 // Deployment layout (scripts/build_web.py): py/wheel.json -> the humanlike wheel; references/manifest.json
 // and the reference files.
 "use strict";
+const VER = new URL(self.location.href).search;     // ?v=<build version> (scripts/build_web.py), or empty
 const PYODIDE = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/";
 importScripts(PYODIDE + "pyodide.js");
 
@@ -15,14 +16,14 @@ async function init(id) {
   py = await loadPyodide({ indexURL: PYODIDE });
   status("loading numpy, scipy, pandas, statsmodels");
   await py.loadPackage(["numpy", "scipy", "pandas", "statsmodels", "micropip"]);
-  const wheel = (await (await fetch(base + "py/wheel.json")).json()).file;
+  const wheel = (await (await fetch(base + "py/wheel.json" + VER)).json()).file;
   status("loading humanlike");
   await py.pyimport("micropip").install(base + "py/" + wheel, { deps: false });
-  const man = await (await fetch(base + "references/manifest.json")).json();
+  const man = await (await fetch(base + "references/manifest.json" + VER)).json();
   py.FS.mkdirTree("/refs");
   py.FS.writeFile("/refs/manifest.json", JSON.stringify(man));
   for (const ref of Object.values(man.references)) {
-    const r = await fetch(base + "references/" + ref.file);
+    const r = await fetch(base + "references/" + ref.file + VER);
     if (r.ok) py.FS.writeFile("/refs/" + ref.file, new Uint8Array(await r.arrayBuffer()));
   }
   py.runPython("import os; os.environ['HUMANLIKE_REFERENCES'] = '/refs'");

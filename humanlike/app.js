@@ -59,7 +59,7 @@ class ServerRuntime {
 class PyodideRuntime {
   label = "In your browser (Pyodide) · data stay on this computer";
   init() {
-    this.worker = new Worker("worker.js?v=cce6cfa4a6");
+    this.worker = new Worker("worker.js?v=07dfaa91d4");
     this.pending = new Map(); this.seq = 0;
     this.worker.onmessage = (e) => {
       const m = e.data, p = this.pending.get(m.id);

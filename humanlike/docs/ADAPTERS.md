@@ -37,8 +37,9 @@ humanlike convert csv runs/ mylab/mypolicy-v0 --name MyPolicy --fs 50 --mass 70
 
 Each file is one rollout, grouped by the subject name stored in the file. Defaults follow Plug-in Gait:
 pelvis = mean of LASI, RASI, LPSI, RPSI (or SACR); feet = LHEE, RHEE. Gaps up to 0.1 s are filled and
-the longest complete stretch is kept. Foot strikes are detected from the markers, as for simulations
-(`events="c3d"` uses the file's Foot Strike events instead).
+the longest complete stretch is kept. Foot strikes are taken at contact from the force plates where they
+cover the trial (instrumented treadmill), else detected from the markers (`events="c3d"` uses the file's
+Foot Strike events instead; see PROFILE.md, foot strikes).
 
 ```bash
 humanlike convert c3d session/ mylab/s01-v0 --name S01                                  # over ground
