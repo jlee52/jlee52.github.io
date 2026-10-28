@@ -33,19 +33,28 @@ Conventions: ground reaction forces are the forces of the floor on the foot; sag
 and powers are those of one leg (`sagittal_side`), positive for flexion / dorsiflexion; strides, speeds
 and gait cycles are computed by the package with one definition for every data set (`humanlike.gait`).
 
-Foot strikes (`humanlike.events.strikes`, the `events` stage) follow the reference each analysis compares
-with: every reference in the bundle states its definition (`events` in references/v1/manifest.json).
-**At contact** for the human treadmill data (gait, sagittal angles, kinetics: force-plate contact): a foot's
-vertical GRF rising through 5 % of body weight, where the GRF covers the rollout (initial contact, Perry &
-Burnfield 2010; brief reloadings within a stance are not strikes, `humanlike.kinetics.foot_strikes`).
-**Kinematic** for the motion-capture references and the overground OOD human data (no GRF at every stride):
-the data set's own strike marks, else the coordinate-based criterion of Zeni et al. (2008). Without GRF the
-contact analyses fall back to the kinematic strikes; the GRF counts as covering the rollout when it gives
-at least half as many strikes as the kinematic criterion (a force plate under a few overground steps does
-not). `evaluate(..., strike_source="grf" | "provided" | "kinematic")` forces one source for every analysis.
-In human treadmill walking the coordinate-based event precedes contact by 3.4 % of the stride, in simulations
-by up to a quarter of the stride (the manuscript's Supplementary Section on foot strikes), which is why the
-two are not mixed within a comparison.
+Foot strikes (`humanlike.events.strikes`, the `events` stage) follow one rule: **each comparison uses
+the most accurate definition that both sides have.** Contact is used when both the data set and the
+reference have foot forces; the kinematic event is used for both when either side has none. Every
+reference in the bundle states its definition (`events` in references/v1/manifest.json).
+
+- **Contact.** A foot's vertical GRF rising through 5 % of body weight (initial contact, Perry & Burnfield
+  2010). Brief reloadings within a stance are not strikes (`humanlike.kinetics.foot_strikes`).
+  - Used with the human treadmill data, which have force plates: the feedforward comparison with them, the
+    sagittal angles and the kinetics.
+  - Used only when the GRF of *every* rollout covers it. The GRF covers a rollout when it gives at least
+    half as many strikes as the kinematic criterion, so a force plate under a few overground steps does not.
+  - Otherwise the whole data set uses the kinematic event, so a comparison never mixes the two.
+- **Kinematic.** The data set's own strike marks, else the coordinate-based criterion of Zeni et al.
+  (2008). Used with the motion-capture references and the overground human data of the feedback
+  signature, which have no forces at every stride, and for every data set without GRF.
+
+The analyses of the forces themselves (gait phases, kinetic principles) delimit strides at contact.
+`evaluate(..., strike_source="grf" | "provided" | "kinematic")` forces one source for every analysis.
+
+The rule exists because the two events differ. In human treadmill walking the coordinate-based event
+precedes contact by 3.4 % of the stride; in simulations it departs by up to a quarter of the stride (the
+manuscript's Supplementary Section on foot strikes).
 Stance runs from a strike to the start of the swing (the longest unloading of the stride), and the
 phases of the stride (double support, single support, flight) are measured from both feet's stance.
 
