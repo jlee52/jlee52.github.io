@@ -3,7 +3,7 @@
   {
    "id": "amp-kinetics",
    "title": "Simulation, every signal (Minari)",
-   "description": "18 AMP rollouts at 120 Hz with joint torques, foot GRFs and sagittal joint angles and moments: every analysis",
+   "description": "18 AMP rollouts at 120 Hz with joint torques, foot GRFs and sagittal joint angles and moments: every signal, but too few speeds and strides for the feedback and energetic signatures (shown as not evaluable)",
    "files": [
     "amp-kinetics-v0/data/main_data.hdf5",
     "amp-kinetics-v0/data/metadata.json"
@@ -13,12 +13,12 @@
   {
    "id": "amp-positions",
    "title": "Simulation, positions only (Minari)",
-   "description": "40 AMP rollouts of the manuscript, pelvis and feet at 30 Hz: feedforward and feedback signatures",
+   "description": "120 AMP rollouts of the manuscript (1.3-2.3 m/s commanded), pelvis and feet at 30 Hz: feedforward and feedback signatures",
    "files": [
     "amp-positions-v0/data/main_data.hdf5",
     "amp-positions-v0/data/metadata.json"
    ],
-   "bytes": 2698327
+   "bytes": 8063181
   },
   {
    "id": "camargo-c3d",

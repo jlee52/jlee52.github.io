@@ -59,7 +59,7 @@ class ServerRuntime {
 class PyodideRuntime {
   label = "In your browser (Pyodide) · data stay on this computer";
   init() {
-    this.worker = new Worker("worker.js?v=cce6cfa4a6");
+    this.worker = new Worker("worker.js?v=3544f63bc5");
     this.pending = new Map(); this.seq = 0;
     this.worker.onmessage = (e) => {
       const m = e.data, p = this.pending.get(m.id);
@@ -254,6 +254,11 @@ function showResults(res, seconds) {
   let notes = "";
   if (skipped.length) notes += `<p class="hint">Not run (the data do not include what they need; see the report): ` +
     skipped.map(([k]) => esc(STAGE_TITLES[k] || k)).join(", ") + ".</p>";
+  const cov = (k, s) => { const r = s.result || {}; if (r.coverage || s.coverage) return r.coverage || s.coverage;
+    return Object.values(r).map((x) => x && x.coverage).find(Boolean); };
+  const low = Object.entries(st).filter(([k, s]) => s.status === "ok" && (cov(k, s) || {}).status === "low");
+  if (low.length) notes += `<p class="hint">Fewer speeds, rollouts or strides than recommended (less certain values; see the report): ` +
+    low.map(([k]) => esc(STAGE_TITLES[k] || k)).join(", ") + ".</p>";
   if (!v.ok) notes += `<p class="error">${esc(v.errors.join("; "))}</p>`;
   $("summary").innerHTML = cards.join("");
   $("notes").innerHTML = notes;
