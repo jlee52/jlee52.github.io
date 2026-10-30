@@ -45,6 +45,10 @@ reference in the bundle states its definition (`events` in references/v1/manifes
   - Used only when the GRF of *every* rollout covers it. The GRF covers a rollout when it gives at least
     half as many strikes as the kinematic criterion, so a force plate under a few overground steps does not.
   - Otherwise the whole data set uses the kinematic event, so a comparison never mixes the two.
+  - A contact must last MIN_STANCE_S = 0.1 s to be a stance. In very fast gaits, where every contact is
+    shorter, the minimum is scaled to 0.2 × the stride: robots that step at 4–5 Hz (Isaac Lab H1: 0.09 s
+    contacts, 0.22 s strides) keep their strikes, while ordinary gaits and the manuscript models are
+    unchanged.
 - **Kinematic.** The data set's own strike marks, else the coordinate-based criterion of Zeni et al.
   (2008). Used with the motion-capture references and the overground human data of the feedback
   signature, which have no forces at every stride, and for every data set without GRF.
